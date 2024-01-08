@@ -4,12 +4,14 @@ import com.buezman.testdemo.config.BaseResponse;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
 @Slf4j
 class UserControllerWebMvcTest {
@@ -72,13 +75,14 @@ class UserControllerWebMvcTest {
                 }
                 """;
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("http://localhost:8080/api/users")
+                        .post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(userRequest))
                 )
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk());
-//                .andExpect(content().json(response));
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+//                .andExpect(content().json(response))
 //                .andExpect(jsonPath("$.status").value("success"))
 //                .andExpect(jsonPath("$.data.fullName").value("Test User"));
 
